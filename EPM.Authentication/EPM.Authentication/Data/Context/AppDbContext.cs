@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EPM.Authentication.Context
+namespace EPM.Authentication.Data.Context
 {
     /// <summary>
     /// 数据上下文类，继承自DbContext
@@ -26,6 +26,8 @@ namespace EPM.Authentication.Context
         /// 用户表
         /// </summary>
         public DbSet<User> Users { get; set; }
+
+        public DbSet<TokenInfo> TokenInfos { get; set; }
 
         #endregion
     }

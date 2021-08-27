@@ -1,23 +1,20 @@
-using EPM.Authentication.Context;
+using EPM.Authentication.Data.Context;
+using EPM.Authentication.Data.Uow;
 using EPM.Authentication.Model.ConfigModel;
+using EPM.Authentication.Repository;
+using EPM.Authentication.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace EPM.Authentication
 {
@@ -49,29 +46,29 @@ namespace EPM.Authentication
             #endregion
 
             #region 身份验证
-            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
-            JwtConfig jwtConfig = Configuration.GetSection("JwtConfig").Get<JwtConfig>();
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddScheme<JwtBearerOptions, AuthenticationHandler<JwtBearerOptions>>(JwtBearerDefaults.AuthenticationScheme, x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.IssuerSigningKey)),
-                    ValidIssuer = jwtConfig.Issuer,
-                    ValidAudience = jwtConfig.Audience,
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
-                    RequireExpirationTime = true
-                };
-            });
+            //services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+            //JwtConfig jwtConfig = Configuration.GetSection("JwtConfig").Get<JwtConfig>();
+            //services.AddAuthentication(x =>
+            //{
+            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //}).AddScheme<JwtBearerOptions, AuthenticationHandler<JwtBearerOptions>>(JwtBearerDefaults.AuthenticationScheme, x =>
+            //{
+            //    x.RequireHttpsMetadata = false;
+            //    x.SaveToken = true;
+            //    x.TokenValidationParameters = new TokenValidationParameters
+            //    {
+            //        ValidateIssuerSigningKey = true,
+            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.IssuerSigningKey)),
+            //        ValidIssuer = jwtConfig.Issuer,
+            //        ValidAudience = jwtConfig.Audience,
+            //        ValidateIssuer = false,
+            //        ValidateAudience = false,
+            //        ValidateLifetime = true,
+            //        ClockSkew = TimeSpan.Zero,
+            //        RequireExpirationTime = true
+            //    };
+            //});
 
             #endregion
 
@@ -86,6 +83,16 @@ namespace EPM.Authentication
                  .WithExposedHeaders("Content-Disposition")
                  .AllowAnyMethod());
             });
+            #endregion
+
+            services.Configure<LoginLockConfig>(Configuration.GetSection("LoginLockConfig"));
+
+            #region 注入
+            services.AddScoped<ILoginService, LoginService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ITokenInfoRepository, TokenInfoRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork<AppDbContext>>();
             #endregion
 
             services.AddControllers();

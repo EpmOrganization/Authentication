@@ -16,12 +16,23 @@ namespace EPM.Authentication.Model.ApiModel
         /// </summary>
         public int Count { get; set; } = 0;
 
-        public new  ApiResponseWithData<T> Success()
+        public new ApiResponseWithData<T> Success()
         {
             return new ApiResponseWithData<T>()
             {
                 Code = 1,
                 Msg = "操作成功"
+            };
+        }
+
+        public ApiResponseWithData<T> Success(T data, int count = 0)
+        {
+            return new ApiResponseWithData<T>()
+            {
+                Code = 1,
+                Msg = "操作成功",
+                Data = data,
+                Count = count
             };
         }
 

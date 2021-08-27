@@ -1,24 +1,26 @@
 {
   "format": 1,
   "restore": {
-    "D:\\企业平台管理\\Authentication\\EPM.Authentication\\EPM.Authentication\\EPM.Authentication.csproj": {}
+    "E:\\企业平台管理\\Authentication\\EPM.Authentication\\EPM.Authentication\\EPM.Authentication.csproj": {}
   },
   "projects": {
-    "D:\\企业平台管理\\Authentication\\EPM.Authentication\\EPM.Authentication\\EPM.Authentication.csproj": {
+    "E:\\企业平台管理\\Authentication\\EPM.Authentication\\EPM.Authentication\\EPM.Authentication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\企业平台管理\\Authentication\\EPM.Authentication\\EPM.Authentication\\EPM.Authentication.csproj",
+        "projectUniqueName": "E:\\企业平台管理\\Authentication\\EPM.Authentication\\EPM.Authentication\\EPM.Authentication.csproj",
         "projectName": "EPM.Authentication",
-        "projectPath": "D:\\企业平台管理\\Authentication\\EPM.Authentication\\EPM.Authentication\\EPM.Authentication.csproj",
-        "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "D:\\企业平台管理\\Authentication\\EPM.Authentication\\EPM.Authentication\\obj\\",
+        "projectPath": "E:\\企业平台管理\\Authentication\\EPM.Authentication\\EPM.Authentication\\EPM.Authentication.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "E:\\企业平台管理\\Authentication\\EPM.Authentication\\EPM.Authentication\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+          "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
@@ -27,9 +29,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "http://localhost:8624/nuget/HSB/": {},
-          "http://localhost:8624/nuget/Test/": {},
-          "http://localhost:8624/nuget/WorkRecord/": {},
+          "http://10.10.10.56:9638/nuget/": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -60,6 +60,10 @@
               "target": "Package",
               "version": "[6.12.2, )"
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
               "version": "[5.0.1, )"
@@ -87,7 +91,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
