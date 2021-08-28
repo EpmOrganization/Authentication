@@ -1,17 +1,14 @@
-﻿using EPM.Authentication.Common.Date;
-using EPM.Authentication.Common.Helper;
-using EPM.Authentication.Common.Security;
+﻿using EPM.Authentication.Common.Helper;
 using EPM.Authentication.Model.ApiModel;
 using EPM.Authentication.Model.Dto;
 using EPM.Authentication.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace EPM.Authentication.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api")]
     [ApiController]
     public class LoginController : ControllerBase
@@ -46,23 +43,5 @@ namespace EPM.Authentication.Controllers
             result = value == 1 ? result.Success(loginResult.TokenInfo) : result.Fail();
             return result;
         }
-
-        [HttpGet]
-        public void Get()
-        {
-            string text = "1234qwerwqr213123";
-            string sign = MD5Utility.Get32LowerMD5(text);
-            string key = MD5Utility.Get32LowerMD5(sign);
-            string vector = MD5Utility.Get16LowerMD5(DateTimeUtility.GetTimestampBase1970().ToString());
-            string data = AESUtility.AESEncrypt(text, key, vector);
-
-            string result=JsonConvert.SerializeObject(new
-            {
-                Data = data,
-                Timestamp = DateTimeUtility.GetTimestampBase1970().ToString(),
-                Sign = sign
-            });
-        }
-
     }
 }

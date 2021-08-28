@@ -1,4 +1,5 @@
-﻿using EPM.Authentication.Common.Date;
+﻿using EPM.Authentication.Cache;
+using EPM.Authentication.Common.Date;
 using EPM.Authentication.Common.Security;
 using EPM.Authentication.Data.Uow;
 using EPM.Authentication.Model.ApiModel;
@@ -24,21 +25,18 @@ namespace EPM.Authentication.Service
         private readonly ITokenInfoRepository _tokenInfoRepository;
         private readonly ITokenService _tokenService;
         private readonly LoginLockConfig _loginLockConfig;
-        private readonly IConfiguration _configuration;
 
         public LoginService(IUnitOfWork unitOfWork,
             IUserRepository userRepository,
             ITokenInfoRepository tokenInfoRepository,
             ITokenService tokenService,
-            IOptions<LoginLockConfig> options,
-            IConfiguration configuration)
+            IOptions<LoginLockConfig> options)
         {
             _unitOfWork = unitOfWork;
             _userRepository = userRepository;
             _tokenInfoRepository = tokenInfoRepository;
             _tokenService = tokenService;
             _loginLockConfig = options.Value;
-            _configuration = configuration;
         }
 
 
@@ -102,26 +100,26 @@ namespace EPM.Authentication.Service
                         //    result.LoginStatus = LoginStatus.DataAuthorityLose;
                         //    break;
                         //}
-
-                        // 读取加密key
-                        string key = _configuration.GetValue<string>("");
-
-                        // 加密
-                        string ciphertext= AESUtility.AESEncrypt($"{user.ID.ToString()}|{DateTimeUtility.GetTimestampBase1970().ToString()}", key, "");
-                        
-
                         // 根据用户生成token信息
-                        string token = await _tokenService.CreateToken(ciphertext);
-                        // 将生成的token存入Redis缓存
-                        result.LoginStatus = LoginStatus.Success;
-                        result.TokenInfo = token;
+                        string token = await _tokenService.CreateToken($"{user.ID.ToString()}");
+                        DataObj dataObj = new DataObj()
+                        {
+                            SData = token,
+                            Timestamp = DateTimeUtility.GetTimestampBase1970()
+                        };
 
+                        
+                        result.LoginStatus = LoginStatus.Success;
+                        // 序列化加密数据
+                        result.TokenInfo = dataObj.Encrypt();
+                        // 将生成的token存入Redis缓存
+                        await RedisCoreHelper.Instance.SetValueAsync(user.ID.ToString(), result.TokenInfo);
                         #region 处理当前登录用户的token信息
                         // 插入token信息
                         TokenInfo tokenInfo = new TokenInfo()
                         {
                             UserID = user.ID,
-                            TokenMsg = token
+                            TokenMsg = result.TokenInfo
                         };
                         _tokenInfoRepository.Add(tokenInfo);
                         #endregion

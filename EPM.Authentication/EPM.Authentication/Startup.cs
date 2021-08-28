@@ -33,6 +33,8 @@ namespace EPM.Authentication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Appsettings.Instance().Initial(Configuration);
+
             #region 配置数据库连接
             // 获取配置信息
             ConnectionStrings connectionStrings = new ConnectionStrings();
@@ -46,29 +48,15 @@ namespace EPM.Authentication
             #endregion
 
             #region 身份验证
-            //services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
-            //JwtConfig jwtConfig = Configuration.GetSection("JwtConfig").Get<JwtConfig>();
-            //services.AddAuthentication(x =>
-            //{
-            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //}).AddScheme<JwtBearerOptions, AuthenticationHandler<JwtBearerOptions>>(JwtBearerDefaults.AuthenticationScheme, x =>
-            //{
-            //    x.RequireHttpsMetadata = false;
-            //    x.SaveToken = true;
-            //    x.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        ValidateIssuerSigningKey = true,
-            //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.IssuerSigningKey)),
-            //        ValidIssuer = jwtConfig.Issuer,
-            //        ValidAudience = jwtConfig.Audience,
-            //        ValidateIssuer = false,
-            //        ValidateAudience = false,
-            //        ValidateLifetime = true,
-            //        ClockSkew = TimeSpan.Zero,
-            //        RequireExpirationTime = true
-            //    };
-            //});
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+            JwtConfig jwtConfig = Configuration.GetSection("JwtConfig").Get<JwtConfig>();
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            // 使用JWT验证
+            .AddJwtBearer();
 
             #endregion
 
