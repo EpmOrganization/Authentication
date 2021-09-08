@@ -1,6 +1,6 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 # 使用运行时镜像
-mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 # 设置工作目录
 WORKDIR /app
 # 把目录下的内容都复制到当前目录下
