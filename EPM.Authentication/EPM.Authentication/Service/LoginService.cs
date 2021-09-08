@@ -100,21 +100,38 @@ namespace EPM.Authentication.Service
                         //    result.LoginStatus = LoginStatus.DataAuthorityLose;
                         //    break;
                         //}
-                        // 根据用户生成token信息
-                        string token = await _tokenService.CreateToken($"{user.ID.ToString()}");
+
+                        #region 先生成token在加密
+                        //string token = await _tokenService.CreateToken($"{user.ID.ToString()}");
+                        //// 加密
+                        //DataObj dataObj = new DataObj()
+                        //{
+                        //    SData = token,
+                        //    Timestamp = DateTimeUtility.GetTimestampBase1970()
+                        //};
+                        //// 序列化加密数据
+                        //result.TokenInfo = dataObj.Encrypt();
+                        #endregion
+
+                        #region 先加密在生成token
                         DataObj dataObj = new DataObj()
                         {
-                            SData = token,
+                            SData = $"{user.ID.ToString()}",
                             Timestamp = DateTimeUtility.GetTimestampBase1970()
                         };
 
-                        
-                        result.LoginStatus = LoginStatus.Success;
+                        // 根据用户生成token信息
+                        string token = await _tokenService.CreateToken(dataObj.Encrypt());
                         // 序列化加密数据
-                        result.TokenInfo = dataObj.Encrypt();
+                         result.TokenInfo = token;
+                        #endregion
+
+                        result.LoginStatus = LoginStatus.Success;
+                     
+
                         // 将生成的token存入Redis缓存
                         await RedisCoreHelper.Instance.SetValueAsync(user.ID.ToString(), result.TokenInfo);
-                        #region 处理当前登录用户的token信息
+                        #region 处理当前登录用户的token信息，每登录一次都存入数据库
                         // 插入token信息
                         TokenInfo tokenInfo = new TokenInfo()
                         {
